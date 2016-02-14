@@ -1,0 +1,30 @@
+{
+  "name": "timezone-dashboard",
+  "homepage": "https://github.com/thewheat/timezone-dashboard",
+  "authors": [
+    "Timothy Lim <tim@thewheatfield.org>"
+  ],
+  "description": "Just a timezone dashboard that makes working with timezones easier",
+  "main": "index.html",
+  "moduleType": [],
+  "keywords": [
+    "timezone",
+    "dashboard"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "ember-data": "1.13",
+    "ember": "1.13",
+    "handlebars": "~4.0.5",
+    "moment-timezone": "~0.5.0",
+    "typeahead.js": "~0.11.1"
+  }
+}

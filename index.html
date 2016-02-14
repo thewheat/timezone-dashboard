@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/handlebars/handlebars.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+  <script src="bower_components/typeahead.js/dist/typeahead.bundle.min.js"></script>
+  <script src="bower_components/ember/ember.min.js"></script>
+  <script src="bower_components/ember-data/ember-data.min.js"></script>
+  <script src="bower_components/ember/ember-template-compiler.js"></script>
+<style>
+/* scaffolding */
+/* ----------- */
+
+.tt-menu,
+.gist {
+  text-align: left;
+}
+
+/* base styles */
+/* ----------- */
+
+html {
+  font: normal normal normal 18px/1.2 "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+  color: #292f33;
+}
+
+
+a {
+  color: #03739c;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.table-of-contents li {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+}
+
+.table-of-contents li a {
+  font-size: 16px;
+  color: #999;
+}
+
+p + p {
+  margin: 30px 0 0 0;
+}
+
+/* site theme */
+/* ---------- */
+
+.title {
+  margin: 20px 0 0 0;
+  font-size: 64px;
+}
+
+.example {
+  padding: 30px 0;
+}
+
+.example-name {
+  margin: 20px 0;
+  font-size: 32px;
+}
+
+.demo {
+  position: relative;
+  *z-index: 1;
+  margin: 50px 0;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+  width: 396px;
+  height: 30px;
+  padding: 8px 12px;
+  font-size: 24px;
+  line-height: 30px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  outline: none;
+}
+
+.typeahead {
+  background-color: #fff;
+}
+
+.typeahead:focus {
+  border: 2px solid #0097cf;
+}
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-menu {
+  width: 422px;
+  margin: 12px 0;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.gist {
+  font-size: 14px;
+}
+
+/* example specific styles */
+/* ----------------------- */
+
+#custom-templates .empty-message {
+  padding: 5px 10px;
+ text-align: center;
+}
+
+#multiple-datasets .league-name {
+  margin: 0 20px 5px 20px;
+  padding: 3px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+#scrollable-dropdown-menu .tt-menu {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+#rtl-support .tt-menu {
+  text-align: right;
+}
+
+.tt-dropdown-menu {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+
+input.selectDate{
+  min-width: 180px;
+}
+
+.row.alt {
+  background-color: #dcdcdc;
+}
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+	margin-bottom: 0;
+}
+.tt-hint {
+	display: block;
+	width: 100%;
+	height: 38px;
+	padding: 8px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #999;
+	vertical-align: middle;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	      transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.tt-dropdown-menu {
+	min-width: 160px;
+	margin-top: 2px;
+	padding: 5px 0;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	background-clip: padding-box;
+
+}
+.tt-suggestion {
+	display: block;
+	padding: 3px 20px;
+}
+.tt-suggestion.tt-is-under-cursor {
+	color: #fff;
+	background-color: #428bca;
+}
+.tt-suggestion.tt-is-under-cursor a {
+	color: #fff;
+}
+.tt-suggestion p {
+	margin: 0;
+}
+
+.twitter-typeahead{
+  display: inline !important;
+}
+</style>
+</head>
+<body>
+  <script type='text/x-handlebars' data-template-name='application'>
+    <div class='navbar navbar-default'>
+      <div class='container'>
+        <h1>Timezone Dashboard</h1>
+        <ul class='nav navbar-nav navbar-right'>
+        </ul>
+      </div>
+    </div>
+    <div class='container'>
+      {{outlet}}
+    </div>
+    <footer class='container'>
+    </footer>
+  </script>
+  <script type='text/x-handlebars' data-template-name='index'>
+    <div class='row'>
+      <div class='col-sm-12'>
+        <div class="form-inline">
+          {{timezone-picker action='add'}}
+          <button class="form-control btn btn-info" {{action "reset"}}>Reset Time</button> Timestamp: {{unix}}
+        </div>
+        {{timezone-dashboard timezones=model delete='deleteIndex' time=time updateTime=(action 'updateTime')}}
+      </div>
+    </div>
+  </script>
+  <script type='text/x-handlebars' data-template-name='components/timezone-picker'>
+    {{input class="form-control timezoneList" type="text" placeholder="Add a Timezone" value=newtimezone change='updateTimezone'}}
+  </script>
+  <script type='text/x-handlebars' data-template-name='components/timezone-dashboard'>
+      {{#each timezones key='id' as |timezone index|}}
+        {{timezone-details index=index timezone=timezone time=time delete=(action 'deleteTimezone') updateTime=(action 'updateTime')}}
+      {{/each}}
+  </script>
+  <script type='text/x-handlebars' data-template-name='components/timezone-details'>
+    <div class='col-sm-4'>
+      <h4>{{titleDisplay}}</h4>
+    </div>
+    <div class='col-sm-4'>
+      <h4>{{timeDisplay}}</h4>
+    </div>
+    <div class='col-sm-4 form-inline'>
+        {{input type="text" class="form-control selectDate"
+          placeholder="Set a time Y-M-D H:m:s"
+          value=newtime enter=(action 'setTime' newtime timezone)
+          }}
+          <button {{action "deleteTimezone" timezone}}
+            class="btn btn-danger"><b>x</b></button>
+    </div>
+  </script>
+
+  <script>
+  var App = Ember.Application.create({
+    LOG_TRANSITIONS: true
+  });
+  App.Router.map(function() {
+    this.resource('timezones', function() {
+      this.resource('timezone', { path: '/:timezone_id' });
+    });
+  });
+
+  App.IndexController = Ember.ArrayController.extend({
+    time: function() {
+      return new Date().getTime();
+    }.property(),
+    unix: Ember.computed('time', function(){
+      return parseInt(this.get('time')/1000.0);
+    }),
+    actions: {
+      reset: function(){
+          this.set('time', new Date().getTime());
+      },
+      updateTime: function(c){
+        this.set('time', c);
+      },
+    }
+  });
+  App.IndexRoute = Ember.Route.extend({
+    newtimezone: null,
+    model: function(){
+      console.log(this.store.findAll('timezone'));
+      return this.store.findAll('timezone');
+    },
+    actions: {
+      deleteIndex: function(timezone){
+        console.log("delete IndexRoute");
+        var timezones = this.modelFor('index');
+        timezones.removeObject(timezone);
+        var deleted = App.DB.delete(timezone);
+      },
+      add: function(timezone){
+        var timezone = this.store.createRecord('timezone', {
+          timezone: timezone
+        });
+        timezone = App.DB.add(timezone);
+      }
+    }
+  });
+  App.TimezonePickerComponent = Ember.Component.extend({
+    tagName: "span",
+    classNames: ["inline"],
+    displayToTimezone: function(string){
+      return this.get("displayToTimezoneList")[string];
+    },
+    displayToTimezoneList: {},
+    timezones: function(){
+      var zones = [];
+      var names = moment.tz.names();
+      var length = names.length;
+      var displayToTimezoneList = {};
+      for(var i = 0; i < length; i++){
+        var name = names[i];
+        var displayName = name + " (" + moment.tz(name).zoneAbbr() + ")";
+        zones.push(displayName);
+        displayToTimezoneList[displayName] = name;
+      }
+      this.set("displayToTimezoneList", displayToTimezoneList);
+      return zones;
+    }.property("timezones"),
+    updateTimezone: function(displayItem){
+      var timezone = this.displayToTimezone(displayItem);
+      var validatedTimezone = timezone;
+      // todo validate timezone
+      if(this.get('timezones').contains(displayItem)){
+        this.sendAction('action', validatedTimezone);
+        setTimeout(function(){
+          this.$(".timezoneList").blur();
+          this.$(".timezoneList").typeahead('val', '');
+        },200);
+      }
+    },
+    didInsertElement: function(view){
+
+      var RegExpEscape= function(s) {
+        return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      };
+
+      var substringMatcher = function(strs) {
+        return function findMatches(q, cb) {
+          var matches, substringRegex;
+          // an array that will be populated with substring matches
+          matches = [];
+          // regex used to determine if a string contains the substring `q`
+          substrRegex = new RegExp(RegExpEscape(q), 'i');
+          // iterate through the pool of strings and for any string that
+          // contains the substring `q`, add it to the `matches` array
+          $.each(strs, function(i, str) {
+            if (substrRegex.test(str)) {
+              matches.push(str);
+            }
+          });
+          cb(matches);
+        };
+      };
+      var me = this;
+      this.$('.timezoneList').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 0,
+      },
+      {
+        source: substringMatcher(this.get('timezones')),
+        limit: 1000
+      })
+      .bind('typeahead:select', function(){ me.updateTimezone($(this).val())})
+      .on("change", function(){ me.updateTimezone($(this).val())})
+      ;
+
+      this._super();
+    }
+  });
+
+
+  App.TimezoneDashboardComponent = Ember.Component.extend({
+    actions: {
+      deleteTimezone: function(timezone){
+        console.log("delete TimezoneDashboardComponent ", timezone);
+        this.sendAction('delete', timezone);
+      },
+      updateTime: function(unix_milliseconds){
+        this.set('time', unix_milliseconds);
+      }
+    },
+    didInsertElement: function(){
+      this.set('selectedDate',1455435486);
+    }
+  });
+  App.TimezoneDetailsComponent = Ember.Component.extend({
+    classNames: ['row'],
+    classNameBindings: ['alt'],
+    alt: function() {
+      return this.get('index') % 2 === 1;
+    }.property('index'),
+    details: function(){
+      return {
+        timezone: this.get('timezone').get('timezone')
+      }
+    },
+    titleDisplay: function(){
+      return this.details().timezone;
+    }.property('titleDisplay'),
+    timeDisplay: Ember.computed('time', function(){
+      var time = this.get('time');
+      var format = "YYYY-MM-DD HH:mm:ss z ZZ ddd";
+      try {
+        var time = parseInt(this.get('time'));
+        var m = moment(time);
+        if(this.details().timezone != null){
+          return m.tz(this.details().timezone).format(format);
+        }
+      } catch (e) {
+          console.error("Error parsing date for ", this.details());
+      } finally {
+
+      }
+      return "--Invalid time--"
+    }),
+    didInsertElement: function() {
+    },
+    setTime: function(time, timezone){
+      var m = moment.tz(time, timezone);
+      if(m.isValid()){
+        this.sendAction('updateTime', m.valueOf());
+      }
+    },
+    actions: {
+      setTime: function(time, timezone){
+        var timezoneStr = timezone.get('timezone');
+        console.log("Set time!", time);
+        console.log("Set time!", timezoneStr);
+        this.setTime(time,timezoneStr);
+      },
+      deleteTimezone: function(timezone){
+        console.log("delete TimezoneDashboardComponent ", timezone);
+        this.sendAction('delete', timezone);
+      },
+    },
+  });
+
+  App.ApplicationAdapter = DS.FixtureAdapter.extend();
+  App.Timezone = DS.Model.extend({
+    timezone: DS.attr('string')
+  });
+
+  App.DB = (function(){
+    var timezones = []
+    var sanitizeData = function(savedData){
+      var data = [];
+
+      // get all valid data
+      for(var i = 0; i < savedData.length;i++){
+        var row = sanitizeRow(savedData[i]);
+        if(row != null)
+          data.push(row);
+      }
+
+      // set IDs if necessary
+      for(var i = 0; i < data.length;i++){
+        if(data[i].id == null || isNaN(data[i].id)) data[i].id = i;
+      }
+      sort(data);
+      return data;
+    }
+    var sort = function(data){
+      data.sort(function(a, b){
+        var keyA = (a.id),
+            keyB = (b.id);
+        if(keyA < keyB) return -1;
+        if(keyA > keyB) return 1;
+        return 0;
+      });
+    };
+    var getIntOrNull = function(data){
+      var int = parseInt(data);
+      if(isNaN(int))
+        return null;
+      return int;
+    }
+    var sanitizeRow = function(row){
+      var sanitizeRow = row;
+
+      if(typeof(row) === "undefined") return null;
+      sanitizeRow.id = getIntOrNull(row.id);
+      sanitizeRow.timezone = row.timezone;
+      return row;
+    }
+    var load = function(){
+        timezones = [];
+        try{
+          var savedData = JSON.parse(localStorage.getItem("data"));
+          console.log("data loaded", savedData);
+          timezones = sanitizeData(savedData);
+        }catch(err){
+          console.error(err);
+        }
+        App.Timezone.FIXTURES = timezones;
+    }
+    var save = function(data){
+      console.log("data to save", data);
+      localStorage.setItem("data", JSON.stringify(data));
+    }
+    var addItem = function(row){
+      var row = sanitizeRow(row)
+      if(row !== null)
+      {
+        row.id = timezones.length;
+        timezones.push(row);
+        save(timezones);
+        load();
+        return row;
+      }
+      return null;
+    };
+    var deleteItem = function(row){
+      var id = parseInt(row.get("id"));
+      var deleted = timezones.filter(function(item){ return item.id == id});
+      var newtimezones = timezones.filter(function(item){ return item.id != id});
+      save(newtimezones);
+      load();
+      return deleted;
+    };
+    return {
+      save: save,
+      load: load,
+      add: addItem,
+      delete: deleteItem
+    }
+  })();
+  App.DB.load();
+
+  </script>
+</body>
+</html>
