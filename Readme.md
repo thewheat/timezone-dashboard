@@ -1,6 +1,6 @@
 # Timezone Dashboard
 - Demo: https://thewheat.github.io/timezone-dashboard
-- Just a timezone dashboard
+- Just a timezone dashboard that makes working with timezones easier
 - Built to:
    - learn some Ember
    - make working with timezones a bit easier
