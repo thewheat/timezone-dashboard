@@ -262,6 +262,11 @@ input.selectDate{
         <div class="form-inline">
           {{timezone-picker action='add'}}
           <button class="form-control btn btn-info" {{action "reset"}}>Reset Time</button> Timestamp: {{unix}}
+          {{input type="text" class="form-control"
+            placeholder="Set a unix timestamp"
+            value=newunix
+            enter=(action 'updateUnix' newunix)
+            }}
         </div>
         {{timezone-dashboard timezones=model delete='deleteIndex' time=time updateTime=(action 'updateTime')}}
       </div>
@@ -316,6 +321,9 @@ input.selectDate{
       updateTime: function(c){
         this.set('time', c);
       },
+      updateUnix: function(c){
+        this.set('time', c * 1000);
+      }
     }
   });
   App.IndexRoute = Ember.Route.extend({
@@ -532,7 +540,8 @@ input.selectDate{
         try{
           var savedData = JSON.parse(localStorage.getItem("data"));
           console.log("data loaded", savedData);
-          timezones = sanitizeData(savedData);
+          if(savedData !== null)
+            timezones = sanitizeData(savedData);
         }catch(err){
           console.error(err);
         }
