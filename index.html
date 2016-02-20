@@ -239,6 +239,11 @@ input.selectDate{
 .twitter-typeahead{
   display: inline !important;
 }
+
+
+.margin-bottom{
+  margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -258,19 +263,33 @@ input.selectDate{
   </script>
   <script type='text/x-handlebars' data-template-name='index'>
     <div class='row'>
-      <div class='col-sm-12'>
+      <div class='col-sm-4 margin-bottom'>
+        {{timezone-picker action='add'}}
+      </div>
+      <div class='col-sm-4 margin-bottom'>
         <div class="form-inline">
-          {{timezone-picker action='add'}}
-          <button class="form-control btn btn-info" {{action "reset"}}>Reset Time</button> Timestamp: {{unix}}
-          {{input type="text" class="form-control"
-            placeholder="Set a unix timestamp"
-            value=newunix
-            enter=(action 'updateUnix' newunix)
-            }}
-          {{#if error}}
-          <span class='alert alert-danger'>{{error}}</span>
+          <div class="input-group">
+            <span class="input-group-addon">Timestamp: </span>
+            <span class="form-control">{{unix}}</span>
+          </div>
+          <button class="btn btn-info" {{action "reset"}}>Reset Time</button>
+        </div>
+      </div>
+      <div class='col-sm-4 margin-bottom'>
+          <div class="form-inline">
+            {{input type="text" class="form-control"
+              placeholder="Set a unix timestamp"
+              value=newunix
+              enter=(action 'updateUnix' newunix)
+              }}
+            {{#if error}}
+            <span class='alert alert-danger'>{{error}}</span>
           {{/if}}
         </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-sm-12'>
         {{timezone-dashboard timezones=model delete='deleteIndex' time=time updateTime=(action 'updateTime')}}
       </div>
     </div>
@@ -335,8 +354,12 @@ input.selectDate{
     onNewunixChanged: Ember.observer('newunix', function(){
       var int = parseInt(this.get('newunix'));
       this.clearErrors();
-      if(!isNaN(int))
+      if(!isNaN(int)){
         this.send('updateUnix', int);
+      }
+      else if(this.get('newunix') === ""){
+        this.clearErrors();
+      }
       else {
         this.setErrors("Invalid timestamp");
       }
