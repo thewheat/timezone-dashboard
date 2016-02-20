@@ -375,7 +375,6 @@ input.selectDate{
       if(this.get('timezones').contains(displayItem)){
         this.sendAction('action', validatedTimezone);
         setTimeout(function(){
-          this.$(".timezoneList").blur();
           this.$(".timezoneList").typeahead('val', '');
         },200);
       }
