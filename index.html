@@ -267,6 +267,9 @@ input.selectDate{
             value=newunix
             enter=(action 'updateUnix' newunix)
             }}
+          {{#if error}}
+          <span class='alert alert-danger'>{{error}}</span>
+          {{/if}}
         </div>
         {{timezone-dashboard timezones=model delete='deleteIndex' time=time updateTime=(action 'updateTime')}}
       </div>
@@ -314,8 +317,23 @@ input.selectDate{
     unix: Ember.computed('time', function(){
       return parseInt(this.get('time')/1000.0);
     }),
-    newUnixChanged: Ember.observer('newunix', function(){
-      this.send('updateUnix', this.get('newunix'));
+    clearErrors: function(){
+      this.setErrors('');
+    },
+    setErrors: function(str){
+      this.set('error', str);
+    },
+    onNewunixChanged: Ember.observer('newunix', function(){
+      var int = parseInt(this.get('newunix'));
+      this.clearErrors();
+      if(!isNaN(int))
+        this.send('updateUnix', int);
+      else {
+        this.setErrors("Invalid timestamp");
+      }
+    }),
+    onUnixChanged: Ember.observer('unix', function(){
+      this.clearErrors();
     }),
     actions: {
       reset: function(){
