@@ -489,10 +489,20 @@ input.selectDate{
     didInsertElement: function() {
     },
     setTime: function(time, timezone){
-      var m = moment.tz(time, timezone);
-      if(m.isValid()){
-        this.sendAction('updateTime', m.valueOf());
+      var formats = [
+        'YYYY-MM-DD hh:mm:ss',
+        'MMM DD, YYYY [at] hh:mma',
+        'ddd MMM DD YYYY HH:mm:ss'
+      ];
+      for(var i = 0; i < formats.length; i++){
+        console.log(formats[i]);
+        var m = moment.tz(time, formats[i],timezone);
+        if(m.isValid()){
+          this.sendAction('updateTime', m.valueOf());
+          return;
+        }
       }
+      console.log("Invalid date");
     },
     actions: {
       setTime: function(time, timezone){
