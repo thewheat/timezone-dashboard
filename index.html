@@ -314,6 +314,9 @@ input.selectDate{
     unix: Ember.computed('time', function(){
       return parseInt(this.get('time')/1000.0);
     }),
+    newUnixChanged: Ember.observer('newunix', function(){
+      this.send('updateUnix', this.get('newunix'));
+    }),
     actions: {
       reset: function(){
           this.set('time', new Date().getTime());
