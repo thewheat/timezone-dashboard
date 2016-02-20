@@ -279,8 +279,17 @@ input.selectDate{
     {{input class="form-control timezoneList" type="text" placeholder="Add a Timezone" value=newtimezone change='updateTimezone'}}
   </script>
   <script type='text/x-handlebars' data-template-name='components/timezone-dashboard'>
+    {{#if error}}
+      <div class="row">
+        <div class='col-sm-12 alert alert-danger'>{{error}}</div>
+      </div>
+    {{/if}}
       {{#each timezones key='id' as |timezone index|}}
-        {{timezone-details index=index timezone=timezone time=time delete=(action 'deleteTimezone') updateTime=(action 'updateTime')}}
+        {{timezone-details index=index timezone=timezone
+          time=time delete=(action 'deleteTimezone')
+          updateTime=(action 'updateTime')
+          error=(action 'error')
+        }}
       {{/each}}
   </script>
   <script type='text/x-handlebars' data-template-name='components/timezone-details'>
@@ -443,13 +452,26 @@ input.selectDate{
 
 
   App.TimezoneDashboardComponent = Ember.Component.extend({
+    clearErrors: function(){
+      this.setErrors('');
+    },
+    setErrors: function(str){
+      console.log("err: " + str);
+      this.set('error', str);
+    },
     actions: {
+
       deleteTimezone: function(timezone){
         console.log("delete TimezoneDashboardComponent ", timezone);
         this.sendAction('delete', timezone);
       },
       updateTime: function(unix_milliseconds){
+        this.clearErrors();
         this.set('time', unix_milliseconds);
+      },
+      error: function(str){
+        console.log("handle erro: " + str);
+        this.setErrors(str);
       }
     },
     didInsertElement: function(){
@@ -502,6 +524,7 @@ input.selectDate{
           return;
         }
       }
+      this.send('error', 'Invalid date');
       console.log("Invalid date");
     },
     onNewTimeChanged: Ember.observer('newtime', function(){
@@ -512,8 +535,14 @@ input.selectDate{
       if(time !== ""){
         this.setTime(time,timezoneStr);
       }
+      else {
+        this.send('error', '');
+      }
     }),
     actions: {
+      error: function(str){
+        this.sendAction('error', str);
+      },
       setTime: function(time, timezone){
         var timezoneStr = timezone.get('timezone');
         console.log("Set time!", time);
