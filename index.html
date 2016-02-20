@@ -504,6 +504,15 @@ input.selectDate{
       }
       console.log("Invalid date");
     },
+    onNewTimeChanged: Ember.observer('newtime', function(){
+      var timezoneStr = this.get('timezone').get('timezone');
+      var time = this.get('newtime');
+      console.log("Set time!", time);
+      console.log("Set time!", timezoneStr);
+      if(time !== ""){
+        this.setTime(time,timezoneStr);
+      }
+    }),
     actions: {
       setTime: function(time, timezone){
         var timezoneStr = timezone.get('timezone');
